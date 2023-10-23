@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import HomeIcon from "./ui/icons/HomeIcon";
 import HomeFillIcon from "./ui/icons/HomeFillIcon";
@@ -10,6 +10,7 @@ import SearchFillIcon from "./ui/icons/SearchFillIcon";
 import NewIcon from "./ui/icons/NewIcon";
 import NewFillIcon from "./ui/icons/NewFillIcon";
 import ColorButton from "./ui/ColorButton";
+import { signOut, useSession } from "next-auth/react";
 
 const LINKS = [
   {
@@ -31,6 +32,10 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  console.log(pathname);
 
   return (
     <nav>
@@ -41,7 +46,14 @@ export default function Navbar() {
           </li>
         ))}
 
-        <ColorButton text="Sing in" onClick={() => alert('로그인')}/>
+        {session ? (
+          <ColorButton text="Sign Out" onClick={() => signOut()} />
+        ) : (
+          <ColorButton
+            text="Sign In"
+            onClick={() => router.push(`/auth/signin?callbackUrl=${location.href}`)}
+          />
+        )}
       </ul>
     </nav>
   );
