@@ -9,6 +9,7 @@ import SearchIcon from "./ui/icons/SearchIcon";
 import SearchFillIcon from "./ui/icons/SearchFillIcon";
 import NewIcon from "./ui/icons/NewIcon";
 import NewFillIcon from "./ui/icons/NewFillIcon";
+import ColorButton from "./ui/ColorButton";
 
 const LINKS = [
   {
@@ -39,9 +40,8 @@ export default function Navbar() {
             <Link href={path}>{path === pathname ? selectedIcon : icon}</Link>
           </li>
         ))}
-        <li>
-          <button className="border-2 p-1">로그인</button>
-        </li>
+
+        <ColorButton text="Sing in" onClick={() => alert('로그인')}/>
       </ul>
     </nav>
   );
