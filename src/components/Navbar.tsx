@@ -10,7 +10,9 @@ import SearchFillIcon from "./ui/icons/SearchFillIcon";
 import NewIcon from "./ui/icons/NewIcon";
 import NewFillIcon from "./ui/icons/NewFillIcon";
 import ColorButton from "./ui/ColorButton";
-import { signOut, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
+import Avatar from "./Avatar";
 
 const LINKS = [
   {
@@ -33,9 +35,7 @@ const LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const router = useRouter();
-
-  console.log(pathname);
+  const user = session?.user;
 
   return (
     <nav>
@@ -46,13 +46,21 @@ export default function Navbar() {
           </li>
         ))}
 
+        {user && (
+          <li>
+            <Link href={`/user/${user.username}`}>
+              <Avatar image={user.image} />
+            </Link>
+          </li>
+        )}
         {session ? (
-          <ColorButton text="Sign Out" onClick={() => signOut()} />
+          <li>
+            <ColorButton text="Sign Out" onClick={() => signOut()} />
+          </li>
         ) : (
-          <ColorButton
-            text="Sign In"
-            onClick={() => router.push(`/auth/signin?callbackUrl=${location.href}`)}
-          />
+          <li>
+            <ColorButton text="Sign In" onClick={() => signIn()} />
+          </li>
         )}
       </ul>
     </nav>

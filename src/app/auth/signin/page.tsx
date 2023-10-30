@@ -1,18 +1,28 @@
-"use client";
+import Signin from "@/components/Signin";
+import { getServerSession } from "next-auth";
+import { getProviders } from "next-auth/react";
+import { redirect } from "next/navigation";
 
-import ColorButton from "@/components/ui/ColorButton";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+type Props = {
+  searchParams: {
+    callbackUrl: string;
+  };
+};
 
-export default function SigninPage() {
-  const params = useSearchParams();
-  console.log(params.get("callbackUrl"));
+export default async function SigninPage({
+  searchParams: { callbackUrl },
+}: Props) {
+  const session = await getServerSession();
+
+  if (session) {
+    redirect("/");
+  }
+
+  const providers = (await getProviders()) ?? {};
+
   return (
-    <ColorButton
-      text="Sign In With Google"
-      onClick={() =>
-        signIn("google", { callbackUrl: params.get("callbackUrl") || "" })
-      }
-    />
+    <section className="flex justify-center mt-[30%]">
+      <Signin providers={providers} callbackUrl={callbackUrl ?? "/"} />
+    </section>
   );
 }
