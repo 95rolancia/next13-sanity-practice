@@ -1,5 +1,4 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-// import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
 const authOptions: NextAuthOptions = {
@@ -9,9 +8,22 @@ const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
+  callbacks: {
+    async session({ session }) {
+      console.log(session);
+      const user = session.user;
+      if (user) {
+        session.user = {
+          ...user,
+          username: user.email?.split("@")[0] || "",
+        };
+      }
+
+      return session;
+    },
+  },
   pages: {
-    error: "/",
-    signIn: ""
+    signIn: "/auth/signin",
   },
 };
 
