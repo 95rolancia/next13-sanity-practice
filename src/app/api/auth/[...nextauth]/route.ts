@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { addUser } from "@/service/user";
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -20,6 +21,19 @@ const authOptions: NextAuthOptions = {
       }
 
       return session;
+    },
+    async signIn({ user: { id, name, image, email } }) {
+      if (!email) return false;
+
+      addUser({
+        id: id,
+        name: name || "",
+        image,
+        email,
+        username: email?.split("@")[0],
+      });
+
+      return true;
     },
   },
   pages: {
