@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { addUser } from "@/service/user";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -26,7 +26,7 @@ const authOptions: NextAuthOptions = {
       if (!email) return false;
 
       addUser({
-        id: id,
+        id,
         name: name || "",
         image,
         email,
