@@ -3,8 +3,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import Header from "@/components/Header";
-import { SessionProvider } from "next-auth/react";
 import AuthProvider from "@/components/auth/AuthProvider";
+import { SWRConfig } from "swr";
+import SWRConfigContext from "@/context/SWRConfigContext";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -21,9 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={openSans.className}>
       <body className="w-full max-w-screen-xl overflow-auto mx-auto">
-        <AuthProvider >
+        <AuthProvider>
           <Header />
-          <main>{children}</main>
+          <main className="w-full flex justify-center bg-neutral-50 min-h-full">
+            <SWRConfigContext>{children}</SWRConfigContext>
+          </main>
         </AuthProvider>
       </body>
     </html>
