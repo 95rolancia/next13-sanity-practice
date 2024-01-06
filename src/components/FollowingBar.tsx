@@ -2,13 +2,13 @@
 
 import useSWR from "swr";
 import Avatar from "./Avatar";
-import { DetailUser } from "@/model/user";
+import { HomeUser } from "@/model/user";
 import { PropagateLoader } from "react-spinners";
 import Link from "next/link";
 import ScrollableBar from "./ui/ScrollableBar";
 
 export default function FollowingBar() {
-  const { data, isLoading } = useSWR<DetailUser>("/api/me");
+  const { data, isLoading } = useSWR<HomeUser>("/api/me");
 
   const users = data?.following;
 

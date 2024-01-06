@@ -1,5 +1,5 @@
 import { client } from "./sanity";
-import { ProfileUser } from "@/model/user";
+import { SearchUser } from "@/model/user";
 
 type OAuthUser = {
   id: string;
@@ -47,7 +47,7 @@ export async function searchUsers(keyword?: string) {
     `
     )
     .then((users) =>
-      users.map((user: ProfileUser) => ({
+      users.map((user: SearchUser) => ({
         ...user,
         following: user.following ?? 0,
         followers: user.followers ?? 0,
