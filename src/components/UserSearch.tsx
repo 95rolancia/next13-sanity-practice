@@ -5,19 +5,17 @@ import { FormEvent, useState } from "react";
 import { GridLoader } from "react-spinners";
 import useSWR from "swr";
 import UserCard from "./UserCard";
+import useDebounce from "@/hooks/useDebounce";
 
 export default function UserSearch() {
-  // /api/search/${keyword}
-  // 검색하는 키워드가 있다면 /api/search/bob -> Username이나, 네임에 있다면
-  // 검색하는 키워드가 없다면 /api/search -> 전체 유저
-
   const [keyword, setKeyword] = useState("");
+  const debouncedKeyword = useDebounce(keyword, 1000);
 
   const {
     data: users,
     isLoading,
     error,
-  } = useSWR<ProfileUser[]>(`/api/search/${keyword}`);
+  } = useSWR<ProfileUser[]>(`/api/search/${debouncedKeyword}`);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -31,7 +29,14 @@ export default function UserSearch() {
           autoFocus
           placeholder="Search for a username or name"
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          onChange={(e) => {
+            const inputValue = e.target.value;
+            if (/^[^a-zA-Z0-9]+$/.test(inputValue.charAt(0))) {
+              setKeyword("");
+            } else {
+              setKeyword(inputValue);
+            }
+          }}
         />
       </form>
       {error && <p>Error!</p>}
