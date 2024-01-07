@@ -30,38 +30,39 @@ const LINKS = [
     selectedIcon: <NewFillIcon />,
   },
 ];
-
 export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const user = session?.user;
 
   return (
-    <nav>
-      <ul className="flex items-center gap-4">
-        {LINKS.map(({ path, icon, selectedIcon }) => (
-          <li key={path}>
-            <Link href={path}>{path === pathname ? selectedIcon : icon}</Link>
-          </li>
-        ))}
-
-        {user && (
+    <div className="flex justify-between items-center px-6">
+      <Link href="/">
+        <h1 className="text-3xl font-bold">Instantgram</h1>
+      </Link>
+      <nav>
+        <ul className="flex gap-4 items-center p-4">
+          {LINKS.map(({ path, icon, selectedIcon }) => (
+            <li key={path}>
+              <Link href={path}>{pathname === path ? selectedIcon : icon}</Link>
+            </li>
+          ))}
+          {user && (
+            <li>
+              <Link href={`/user/${user.username}`}>
+                <Avatar image={user.image} size="small" highlight />
+              </Link>
+            </li>
+          )}
           <li>
-            <Link href={`/user/${user.username}`}>
-              <Avatar image={user.image} size="small" highlight />
-            </Link>
+            {session ? (
+              <ColorButton text="Sign out" onClick={() => signOut()} />
+            ) : (
+              <ColorButton text="Sign in" onClick={() => signIn()} />
+            )}
           </li>
-        )}
-        {session ? (
-          <li>
-            <ColorButton text="Sign Out" onClick={() => signOut()} />
-          </li>
-        ) : (
-          <li>
-            <ColorButton text="Sign In" onClick={() => signIn()} />
-          </li>
-        )}
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
   );
 }
