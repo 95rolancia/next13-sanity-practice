@@ -1,8 +1,8 @@
 "use client";
 
-import { HomeUser, ProfileUser } from "@/model/user";
-import useSWR from "swr";
+import { ProfileUser } from "@/model/user";
 import Btn from "./ui/Btn";
+import useMe from "@/hooks/me";
 
 type Props = {
   user: ProfileUser;
@@ -10,7 +10,7 @@ type Props = {
 
 export default function FollowBtn({ user }: Props) {
   const { username } = user;
-  const { data: loggedInUser } = useSWR<HomeUser>("/api/me");
+  const { user: loggedInUser } = useMe();
 
   const showBtn = loggedInUser && loggedInUser.username !== username;
   const following =
