@@ -10,7 +10,6 @@ export default function SWRConfigContext({
   return (
     <SWRConfig
       value={{
-        refreshInterval: 1000,
         fetcher: (url: string) => fetch(url).then((res) => res.json()),
       }}
     >
