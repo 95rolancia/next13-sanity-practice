@@ -10,19 +10,28 @@ type Props = {
 
 export default function FollowBtn({ user }: Props) {
   const { username } = user;
-  const { user: loggedInUser } = useMe();
+  const { user: loggedInUser, toggleFollow } = useMe();
 
   const showBtn = loggedInUser && loggedInUser.username !== username;
-  const following =
+  const following = !!(
     loggedInUser &&
-    loggedInUser.following.find((item) => item.username === username);
+    loggedInUser.following.find((item) => item.username === username)
+  );
 
-  const text = following ? "팔로우취소" : "팔로우";
+  console.log(loggedInUser);
+
+  const text = following ? "팔로우 취소" : "팔로우";
 
   return (
     <>
       {showBtn && (
-        <Btn text={text} onClick={() => {}} red={text === "팔로우취소"} />
+        <Btn
+          text={text}
+          onClick={() => {
+            toggleFollow(user.id, following);
+          }}
+          red={following}
+        />
       )}
     </>
   );
