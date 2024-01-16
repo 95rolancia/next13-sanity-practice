@@ -1,10 +1,17 @@
 import useSWR from "swr";
-import { HomeUser } from "@/model/user";
+import { HomeUser, SimpleUser } from "@/model/user";
 
 async function updateBookmark(id: string, bookmark: boolean) {
   return fetch("/api/bookmarks", {
     method: "PUT",
     body: JSON.stringify({ id, bookmark }),
+  }).then((res) => res.json());
+}
+
+async function updateFollow(id: string, follow: boolean) {
+  return fetch("/api/follow", {
+    method: "PUT",
+    body: JSON.stringify({ id, follow }),
   }).then((res) => res.json());
 }
 
@@ -30,5 +37,13 @@ export default function useMe() {
     });
   };
 
-  return { user, isLoading, error, setBookmark };
+  const toggleFollow = (id: string, follow: boolean) => {
+    if (!user) return;
+
+    return mutate(updateFollow(id, follow), {
+      populateCache: false,
+    });
+  };
+
+  return { user, isLoading, error, setBookmark, toggleFollow };
 }
