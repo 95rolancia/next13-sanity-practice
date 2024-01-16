@@ -95,3 +95,33 @@ export async function removeBookmark(userId: string, postId: string) {
     .unset([`bookmarks[_ref == "${postId}"]`])
     .commit();
 }
+
+export async function follow(userId: string, targetId: string) {
+  return client
+    .transaction()
+    .patch(userId, (user) =>
+      user.setIfMissing({ following: [] }).append("following", [
+        {
+          _ref: targetId,
+          _type: "reference",
+        },
+      ])
+    )
+    .patch(targetId, (user) =>
+      user.setIfMissing({ followers: [] }).append("followers", [
+        {
+          _ref: userId,
+          _type: "reference",
+        },
+      ])
+    )
+    .commit({ autoGenerateArrayKeys: true });
+}
+
+export async function unfollow(userId: string, targetId: string) {
+  return client
+    .transaction()
+    .patch(userId, (user) => user.unset([`following[_ref == "${targetId}"]`]))
+    .patch(targetId, (user) => user.unset([`followers[_ref == "${userId}"]`]))
+    .commit();
+}
